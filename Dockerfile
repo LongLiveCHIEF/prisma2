@@ -1,0 +1,9 @@
+ARG NODE_TAG=latest
+ARG RUST_TAG=latest
+FROM rust:${RUST_TAG} AS RUST
+
+FROM node:${NODE_TAG} AS NODE
+
+
+
+
