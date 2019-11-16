@@ -10,7 +10,7 @@ ARG DOWNLOAD_PROTOCOL=https
 ARG CURL_ARGS=-L
 
 RUN curl ${CURL_ARGS} ${DOWNLOAD_PROTOCOL}://${GITHUB_HOST}/prisma/prisma-engine/tarball/master \
-  | tar xz
+  | tar xz --strip 1
 
 RUN cargo build --release
 
