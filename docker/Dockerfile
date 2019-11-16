@@ -17,17 +17,17 @@ RUN cargo
 # build prisma2 cli
 FROM node:${NODE_TAG} AS NODE
 
-ARG NPM_CONFIG_REGISTRY https:/registry.npmjs.org
+ARG NPM_CONFIG_REGISTRY=https://registry.npmjs.org
 
 RUN npm install --global prisma2
 
-COPY --from RUST /prisma-engine /tmp
+COPY --from=RUST /prisma-engine /tmp
 
 
 # copy binaries to path that @prisma/fetch-engine
 # RUN cp
 
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT["docker-entrypoint.sh]
+ENTRYPOINT ["docker-entrypoint.sh]
 
 CMD ["prisma2"]
