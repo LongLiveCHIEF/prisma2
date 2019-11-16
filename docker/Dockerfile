@@ -23,6 +23,7 @@ RUN cargo build --release
 FROM node:${NODE_TAG} AS NODE
 
 ARG NPM_CONFIG_REGISTRY=https://registry.npmjs.org
+ENV NPM_CONFIG_REGISTRY=$NPM_CONFIG_REGISTRY
 
 RUN npm install --global prisma2
 
@@ -33,6 +34,6 @@ COPY --from=RUST /prisma-engine/target/release /tmp
 # RUN cp
 
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint.sh]
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["prisma2"]
