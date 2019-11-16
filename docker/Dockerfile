@@ -12,7 +12,7 @@ ARG CURL_ARGS=-L
 RUN curl ${CURL_ARGS} ${DOWNLOAD_PROTOCOL}://${GITHUB_HOST}/prisma/prisma-engine/tarball/master \
   | tar xz
 
-RUN cargo
+RUN cargo build --release
 
 # build prisma2 cli
 FROM node:${NODE_TAG} AS NODE
@@ -21,7 +21,7 @@ ARG NPM_CONFIG_REGISTRY=https://registry.npmjs.org
 
 RUN npm install --global prisma2
 
-COPY --from=RUST /prisma-engine /tmp
+COPY --from=RUST /prisma-engine/target/release /tmp
 
 
 # copy binaries to path that @prisma/fetch-engine
