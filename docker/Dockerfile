@@ -24,7 +24,7 @@ RUN npm install --global prisma2
 COPY --from=RUST /prisma-engine/target/release /tmp
 
 
-# copy binaries to path that @prisma/fetch-engine
+# copy binaries to path that @prisma/fetch-engine can find
 # RUN cp
 
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
