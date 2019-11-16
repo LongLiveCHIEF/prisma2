@@ -9,9 +9,14 @@ ARG GITHUB_HOST=github.com
 ARG DOWNLOAD_PROTOCOL=https
 ARG CURL_ARGS=-L
 
+ARG CARGO_CRATES_INDEX=cargo.io
+ARG CARGO_SOURCE_PROTOCOL=https
+
 RUN curl ${CURL_ARGS} ${DOWNLOAD_PROTOCOL}://${GITHUB_HOST}/prisma/prisma-engine/tarball/master \
   | tar xz --strip 1
 
+COPY ./scripts/cargo-config.sh /tmp/cargo-config.sh
+RUN /tmp/cargo-config.sh
 RUN cargo build --release
 
 # build prisma2 cli
