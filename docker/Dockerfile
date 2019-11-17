@@ -35,6 +35,11 @@ RUN find /tmp -mindepth 1 -type d | xargs rm -rf \
 COPY ./scripts/move-binaries.sh /tmp/move-binaries.sh
 RUN /tmp/move-binaries.sh
 
+ARG PRISMA_QUERY_ENGINE_BINARY=/usr/local/lib/node_modules/prisma2/prisma
+ARG PRISMA_MIGRATION_ENGINE_BINARY=/usr/local/lib/node_modules/prisma2/migration-engine
+ENV	PRISMA_QUERY_ENGINE_BINARY $PRISMA_QUERY_ENGINE_BINARY 
+ENV	PRISMA_MIGRATION_ENGINE_BINARY $PRISMA_MIGRATION_ENGINE_BINARY
+
 COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
