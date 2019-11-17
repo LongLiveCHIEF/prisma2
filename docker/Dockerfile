@@ -25,20 +25,22 @@ FROM node:${NODE_TAG} AS NODE
 ARG NPM_CONFIG_REGISTRY=https://registry.npmjs.org
 ENV NPM_CONFIG_REGISTRY=$NPM_CONFIG_REGISTRY
 
-RUN npm install --global prisma2
+RUN mkdir -p /prisma-engine/binaries
 
 COPY --from=RUST /prisma-engine/target/release /tmp
 RUN find /tmp -mindepth 1 -type d | xargs rm -rf \
 	&& rm -rf /tmp/*.*
 
-
 COPY ./scripts/move-binaries.sh /tmp/move-binaries.sh
 RUN /tmp/move-binaries.sh
+RUN mv /prisma-engine/binaries/prisma /prisma-engine/binaries/query-engine-linux-glibc-libssl1.1.0
 
-ARG PRISMA_QUERY_ENGINE_BINARY=/usr/local/lib/node_modules/prisma2/prisma
-ARG PRISMA_MIGRATION_ENGINE_BINARY=/usr/local/lib/node_modules/prisma2/migration-engine
+ARG PRISMA_QUERY_ENGINE_BINARY=/prisma-engine/binaries/query-engine-linux-glibc-libssl1.1.0
+ARG PRISMA_MIGRATION_ENGINE_BINARY=/prisma-engine/binaries/migration-engine
 ENV	PRISMA_QUERY_ENGINE_BINARY $PRISMA_QUERY_ENGINE_BINARY 
 ENV	PRISMA_MIGRATION_ENGINE_BINARY $PRISMA_MIGRATION_ENGINE_BINARY
+
+RUN npm install --global prisma2
 
 COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
