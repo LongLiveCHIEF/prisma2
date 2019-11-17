@@ -28,12 +28,14 @@ ENV NPM_CONFIG_REGISTRY=$NPM_CONFIG_REGISTRY
 RUN npm install --global prisma2
 
 COPY --from=RUST /prisma-engine/target/release /tmp
+RUN find /tmp -mindepth 1 -type d | xargs rm -rf \
+	&& rm -rf /tmp/*.*
 
 
-# copy binaries to path that @prisma/fetch-engine can find
-# RUN cp
+COPY ./scripts/move-binaries.sh /tmp/move-binaries.sh
+RUN /tmp/move-binaries.sh
 
-COPY scripts/docker-entrypoint.sh /usr/local/bin/
+COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["prisma2"]
